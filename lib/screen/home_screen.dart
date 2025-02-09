@@ -26,9 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: PRIMARY_COLOR,
         onPressed: () {
           showModalBottomSheet(
-              context: context,
-              isDismissible: true,
-              builder: (_) => ScheduleBottomSheet(),
+            context: context,
+            isDismissible: true,
+            builder: (_) => ScheduleBottomSheet(),
+            isScrollControlled: true
           );
         },
         child: Icon(
