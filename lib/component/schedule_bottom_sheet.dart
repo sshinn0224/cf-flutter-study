@@ -22,6 +22,8 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    print('bottomInset' + bottomInset.toString());
+    print("media query " + MediaQuery.of(context).size.height.toString());
 
     return Form(
       key: formKey,
@@ -30,7 +32,7 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
           height: MediaQuery.of(context).size.height / 2 + bottomInset,
           color: Colors.white,
           child: Padding(
-            padding: EdgeInsets.only(left: 8, right: 8, bottom: bottomInset),
+            padding: EdgeInsets.only(left: 8, right: 8, top:8, bottom: bottomInset),
             child: Column(
               children: [
                 Row(
@@ -40,6 +42,7 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                           label: '시작 시간',
                           isTime: true,
                           onSaved: (String? val) {
+                            print("val~~" + val.toString());
                             startTime = int.parse(val!);
                           },
                           validator: timeValidator,
@@ -88,5 +91,41 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     );
   }
 
-  void onSavePressed() {}
+  void onSavePressed() {
+    if(formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+
+      print(startTime);
+      print(endTime);
+      print(content);
+    }
+  }
+
+  String? timeValidator(String? val) {
+    if (val == null) {
+      return '값을 입력해주세요';
+    }
+
+    int? number;
+
+    try {
+      number = int.parse(val);
+    } catch (e) {
+      return '숫자를 입력해주세요';
+    }
+
+    if(number < 0 || number > 24) {
+      return '0시부터 24시 사이를 입력해주세요';
+    }
+
+    return null;
+  }
+
+  String? contentValidator(String? val) {
+    if(val == null || val.length == 0) {
+      return '값을 입력해주세요';
+    }
+
+    return null;
+  }
 }

@@ -19,6 +19,7 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("isTime" + isTime.toString());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,6 +33,7 @@ class CustomTextField extends StatelessWidget {
         Expanded(
             flex:isTime ? 0 : 1,
             child: TextFormField(
+              autofocus: true,
               onSaved: onSaved,
               validator: validator,
               cursorColor: Colors.grey,
