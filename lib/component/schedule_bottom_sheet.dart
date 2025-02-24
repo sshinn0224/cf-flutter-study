@@ -1,12 +1,19 @@
 
 import 'package:calendar_scheduler/component/custom_text_field.dart';
 import 'package:calendar_scheduler/const/colors.dart';
+import 'package:calendar_scheduler/database/drift_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:drift/drift.dart' hide Column;
+import 'package:get_it/get_it.dart';
 
 class ScheduleBottomSheet extends StatefulWidget {
+  final DateTime selectedDate;
 
-  const ScheduleBottomSheet({Key? key}) : super(key:key);
+  const ScheduleBottomSheet({
+    required this.selectedDate,
+    Key? key
+  }) : super(key:key);
 
   @override
   State<StatefulWidget> createState() => _ScheduleBottomSheetState();
@@ -42,7 +49,6 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                           label: '시작 시간',
                           isTime: true,
                           onSaved: (String? val) {
-                            print("val~~" + val.toString());
                             startTime = int.parse(val!);
                           },
                           validator: timeValidator,
@@ -91,13 +97,20 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     );
   }
 
-  void onSavePressed() {
+  void onSavePressed() async {
     if(formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
-      print(startTime);
-      print(endTime);
-      print(content);
+      await GetIt.I<LocalDatabase>().createSchedule(
+        SchedulesCompanion(
+          startTime: Value(startTime!),
+          endTime: Value(endTime!),
+          content: Value(content!),
+          date: Value(widget.selectedDate)
+        ),
+      );
+
+      Navigator.of(context).pop();
     }
   }
 
